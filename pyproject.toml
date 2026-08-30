@@ -1,0 +1,61 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rionsis"
+description = "Single-ion level detection, half-life measurement, and Monte Carlo validation for storage-ring Schottky data."
+readme = "README.md"
+# NOTE: no license has been declared anywhere in this repository (no
+# LICENSE file, no prior license metadata). A license classifier/SPDX
+# expression is deliberately not asserted here -- do not guess one; the
+# project owner should add a LICENSE file and set this field explicitly
+# before a PyPI/Zenodo release.
+requires-python = ">=3.10"
+authors = [{ name = "DFreireF" }]
+keywords = ["nuclear physics", "storage ring", "Schottky", "half-life", "Monte Carlo"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+plotting = ["matplotlib>=3.5"]
+dev = [
+    "pytest>=7",
+    "pytest-cov>=4",
+    "rionsis[plotting]",
+]
+
+[project.urls]
+Homepage = "https://github.com/GSI-Nuclear-Astrophysics/RionSiS"
+Repository = "https://github.com/GSI-Nuclear-Astrophysics/RionSiS"
+
+[tool.hatch.version]
+path = "src/rionsis/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rionsis"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "NPY"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
