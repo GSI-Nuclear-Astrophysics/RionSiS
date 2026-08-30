@@ -114,10 +114,8 @@ def plot_staircase_fit(
 ) -> Figure:
     """Time-reversed power trace with the fitted monotonic staircase overlaid.
 
-    Parameters mirror one file's worth of
-    ``rionsis.levels.staircase.StaircaseFitResult`` (already time-reversed,
-    as produced by the fit): ``y_row`` is the raw forward-time trace (this
-    function reverses it for display, matching the fit's own convention).
+    ``y_row`` is the raw forward-time trace; the other arguments mirror
+    one file's worth of ``rionsis.levels.staircase.StaircaseFitResult``.
     """
     y_row = np.asarray(y_row, dtype=float)
     fit_levels = np.asarray(fit_levels, dtype=float)

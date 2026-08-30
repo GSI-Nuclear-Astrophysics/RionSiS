@@ -109,15 +109,9 @@ def compute_power_spectrogram(
         power[i] = (np.abs(np.fft.fftshift(z, axes=0)) ** 2).astype(np.float32)
 
     raw_gbin = np.asarray([np.argmax(s.sum(axis=1)) for s in power], dtype=int)
-    # scipy.ndimage.median_filter degenerates to all-zero output when the
-    # requested window ("size") exceeds the array length (reproduced with
-    # scipy 1.15: median_filter([133]*4, size=11, mode="nearest") -> zeros).
-    # This has no effect for any realistically sized data set (the original
-    # analysis used ~100 files; behaviour for n_files >= 5 is numerically
-    # identical with or without this clip), but without it, a data set with
-    # four or fewer files would silently center every spectrogram on bin 0
-    # instead of the ground-state bin. Clipping the window to the number of
-    # files fixes that degenerate case without changing anything else.
+    # median_filter degenerates to all-zero output when size > len(array)
+    # (scipy 1.15); clip to n_files to avoid mis-centering data sets of <5
+    # files. No effect for n_files >= 5.
     smoothing_window = min(11, n_files)
     gbin = np.asarray(median_filter(raw_gbin, size=smoothing_window, mode="nearest"), dtype=int)
     center = n_freq // 2

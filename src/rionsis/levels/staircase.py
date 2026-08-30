@@ -1,17 +1,14 @@
 """Exact monotonic integer staircase fit.
 
-The core idea: reverse the signal in time. A radioactive decay then
-becomes a strictly monotonic *increase* of the stored ion count,
-``0 -> 1 -> 2 -> ...``. Because the ion count is part of the dynamic
-programming (DP) state, the fit finds the globally optimal monotonic
-integer path for a fixed, consistent Gaussian negative log-likelihood --
-there is no post-hoc reassignment of levels.
+The signal is reversed in time, so a radioactive decay becomes a
+strictly monotonic *increase* of the stored ion count, ``0 -> 1 -> 2 ->
+...``. The ion count is part of the dynamic-programming (DP) state, so
+the fit finds the globally optimal monotonic integer path for a fixed
+Gaussian negative log-likelihood.
 
 ``fit_integer_dataset`` applies ``exact_integer_staircase`` to every file
-in a data set. Real and simulated data must go through the *same*
-``StaircaseFitConfig`` for the Monte Carlo validation in
-``rionsis.simulation`` to mean anything: this is enforced by construction
-here rather than left to two call sites staying in sync by convention.
+in a data set, sharing one ``StaircaseFitConfig`` between real and
+simulated data.
 """
 
 from __future__ import annotations
@@ -187,12 +184,6 @@ def exact_integer_staircase(
 @dataclass(frozen=True)
 class StaircaseFitConfig:
     """Configuration shared by every call to ``fit_integer_dataset``.
-
-    Using one config object for both the real-data fit and the
-    simulation-reconstruction fit is what guarantees "real and simulated
-    data are reconstructed with exactly the same staircase fit" -- an
-    invariant the original analysis relied on but did not enforce in
-    code.
 
     Attributes
     ----------

@@ -1,16 +1,10 @@
 """Signal/background band integration and ground-state noise normalization.
 
-Two independent steps, kept as two functions:
-
-1. ``integrate_bands`` reduces the (frequency x time) power spectrogram to
-   a single background-subtracted power-vs-time trace per file, by
-   averaging over a signal frequency band and one or more background
-   bands.
-2. ``normalize_ground_noise`` rescales those traces to a fixed reference
-   noise level, using a robust, size-adaptive selection of files whose
-   terminal (late-time) segment is a stable, uncontaminated ground state.
-   This is what lets a single hard-coded noise scale (``sigma_e``) be used
-   throughout the rest of the pipeline regardless of data-set size.
+``integrate_bands`` reduces the (frequency x time) power spectrogram to a
+background-subtracted power-vs-time trace per file. ``normalize_ground_noise``
+rescales those traces to a fixed reference noise level, estimated from
+files whose terminal (late-time) segment is a stable, uncontaminated
+ground state.
 """
 
 from __future__ import annotations
@@ -128,13 +122,11 @@ def normalize_ground_noise(
 ) -> GroundNoiseNormalization:
     """Rescale traces to a fixed reference ground-state bin-noise level.
 
-    Without stable contamination, the late, terminal segment of every file
-    belongs to the ground state. This function selects a robust subset of
-    files whose terminal segment is both statistically valid (finite,
-    positive spread) and stable (its first half and second half agree to
-    within ``stability_factor`` times the typical spread), then rescales
-    all traces so the median terminal noise standard deviation across that
-    subset equals ``ref_sigma``.
+    Selects a robust subset of files whose terminal segment is both
+    statistically valid (finite, positive spread) and stable (first half
+    and second half agree within ``stability_factor`` times the typical
+    spread), then rescales all traces so the median terminal noise
+    standard deviation across that subset equals ``ref_sigma``.
 
     Parameters
     ----------
@@ -190,9 +182,7 @@ def normalize_ground_noise(
     change_scale = float(np.median(end_std[valid]))
     stable = valid & (end_change <= stability_factor * change_scale)
     if np.count_nonzero(stable) < min_ground_files:
-        # For small data sets, use the most stable valid terminal segments
-        # instead of failing because of an absolute count intended for
-        # large data sets.
+        # Fall back to the most stable valid segments for small data sets.
         order = np.flatnonzero(valid)[np.argsort(end_change[valid])]
         stable = np.zeros(n_files, dtype=bool)
         stable[order[:min_ground_files]] = True

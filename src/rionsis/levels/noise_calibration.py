@@ -1,17 +1,10 @@
 """Calibrate the occupancy-dependent bin noise ``sigma(N)`` from real plateaus.
 
-The mean plateau height of the exact integer staircase fit is exactly
-``N*A1`` by construction (see ``rionsis.levels.staircase``). This module
-separately measures how much the bin-to-bin power *fluctuates* within
-sufficiently long real plateaus, as a function of the occupancy ``N``,
-using the functional form in ``rionsis.physics.noise_model``. The result
-feeds both the Gaussian likelihood inside the staircase fit and the
-synthetic noise generator in ``rionsis.simulation``.
-
-Because the true lifetime here is comparatively short, long (>=10 bin)
-plateaus are rare; a documented compromise of >=5-bin plateaus is used
-instead, with the sample-standard-deviation's known small-sample low bias
-removed via the c4 correction factor.
+Measures how much the bin-to-bin power fluctuates within staircase
+plateaus (see ``rionsis.levels.staircase``), as a function of occupancy
+``N``, fitting the functional form in ``rionsis.physics.noise_model``.
+The sample standard deviation's small-sample low bias is removed via the
+c4 correction factor.
 """
 
 from __future__ import annotations
@@ -169,9 +162,7 @@ def calibrate_noise_vs_occupancy(
     k_guess = max(0.05, float(np.median(k_candidates)))
 
     if len(states) >= 3:
-        # sigma=1/sqrt(count) weights the robust median support points by
-        # their effective sample size; absolute_sigma=False because these
-        # are not measurement-error bars.
+        # sigma=1/sqrt(count) weights support points by effective sample size.
         popt, covariance = curve_fit(
             sigma_of_occupancy,
             states.astype(float),

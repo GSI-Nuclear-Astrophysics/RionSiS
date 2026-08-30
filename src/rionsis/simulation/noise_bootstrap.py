@@ -1,12 +1,8 @@
 """Empirical (block-bootstrap) noise generator.
 
-Real bin-to-bin noise in the recorded power traces is not simply
-independent Gaussian noise: it carries whatever correlation structure the
-STFT and detector chain impose. Rather than assume a noise *shape*, this
-generator resamples real, normalized ground-state noise segments (in
-random order and orientation) and stitches them end to end, which
-preserves that structure by construction while still letting each
-simulated file draw an independent noise realization.
+Resamples real, normalized ground-state noise segments (in random order
+and orientation) and stitches them end to end, preserving the STFT/
+detector noise correlation structure instead of assuming a Gaussian shape.
 """
 
 from __future__ import annotations
@@ -34,8 +30,8 @@ class EmpiricalNoiseLibrary:
         """Draw a length-``length`` unit-scale noise trace.
 
         Concatenates randomly chosen blocks (each independently,
-        randomly time-reversed) until at least ``length`` samples are
-        available, then truncates to exactly ``length``.
+        randomly time-reversed) until ``length`` samples are available,
+        then truncates.
 
         Parameters
         ----------

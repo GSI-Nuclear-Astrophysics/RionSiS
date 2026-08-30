@@ -1,11 +1,4 @@
-"""Promoted self-consistency checks.
-
-These were originally an inline "toy test" cell in the analysis notebook,
-run every time before trusting the real-data half-life result. Promoting
-them to a reusable, importable function lets them run as an ordinary
-regression test (see ``tests/test_truncated_geometric.py``) instead of
-silently depending on someone re-running a specific notebook cell.
-"""
+"""Self-consistency checks for the half-life estimator."""
 
 from __future__ import annotations
 
@@ -41,8 +34,7 @@ def check_geometric_mle_recovery(
     halflife_true_ms : float, default 37.0
         Injected true half-life, in milliseconds.
     n_samples : int, default 120000
-        Number of synthetic geometric draws (large, so the tolerance
-        check is about correctness of the estimator, not sampling noise).
+        Number of synthetic geometric draws.
     lo : int, default 11
         Strict lower truncation cut (``k > lo - 1``, i.e. ``k >= lo``).
     big_g : int, default 15
@@ -50,7 +42,7 @@ def check_geometric_mle_recovery(
         random total window ``H`` to get its upper truncation bound.
     window_low, window_high : int, default 35, 101
         ``H`` is drawn uniformly from ``[window_low, window_high)`` bins
-        per sample (a stand-in for real files' varying window lengths).
+        per sample.
     tolerance_ms : float, default 1.0
         Maximum allowed deviation between recovered and true half-life.
     seed : int or numpy.random.Generator, default 271828

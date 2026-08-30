@@ -1,9 +1,8 @@
 """Half-life measurement from staircase-fit decay events.
 
 Bridges the ``rionsis.levels`` staircase fit output to a decay-time
-observable (``extract_terminal_events``), then fits and quantifies the
-half-life with a doubly truncated discrete (geometric) maximum-likelihood
-model that accounts for hard detection-window truncation.
+observable (``extract_terminal_events``), then fits the half-life with a
+doubly truncated discrete (geometric) maximum-likelihood model.
 """
 
 from rionsis.halflife.events import EVENT_DTYPE, extract_terminal_events

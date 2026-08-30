@@ -1,12 +1,8 @@
 """Reusable plotting helpers.
 
-Pure presentation: every function here takes already-computed data
-(arrays, or the dataclasses returned by ``rionsis.levels`` /
-``rionsis.halflife`` / ``rionsis.simulation``) and returns the created
-Matplotlib ``Figure``/``Axes``. No physics or statistics is computed in
-this package. Requires the optional ``plotting`` extra
-(``pip install rionsis[plotting]``); nothing else in ``rionsis`` imports
-Matplotlib.
+Pure presentation: takes already-computed data and returns Matplotlib
+``Figure``/``Axes`` objects. Requires the optional ``plotting`` extra
+(``pip install rionsis[plotting]``).
 """
 
 from rionsis.plotting.halflife_plots import plot_halflife_comparison, plot_halflife_heatmap

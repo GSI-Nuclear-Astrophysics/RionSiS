@@ -1,22 +1,14 @@
 """Independent calibration of the single-ion power ``A1``.
 
-The exact integer staircase fit (``rionsis.levels.staircase``) needs the
-mean power increment of a single stored ion, ``A1``, as an *input*. This
-module estimates ``A1`` from the same background-subtracted power traces
-used everywhere else, but without ever running the staircase fit itself:
-it fits a Poisson(ion count)-times-Gaussian(bin noise) mixture model
-directly to the raw power distribution in each time bin.
+Estimates ``A1`` (the input needed by the staircase fit in
+``rionsis.levels.staircase``) from the raw power distribution in each
+time bin, by fitting a Poisson(ion count) x Gaussian(bin noise) mixture
+model -- without running the staircase fit itself.
 
-Because the mixture model's ``mode='exp'`` fit also estimates a decay
-rate for the mean ion occupancy, this calibration produces a *second*,
-fully independent half-life estimate as a by-product -- useful as a
-cross-check against the primary staircase + truncated-geometric-MLE
-result in ``rionsis.halflife``, but not a substitute for it (see
-``A1Calibration.halflife_ms_byproduct``).
-
-A single-ion power A1 obtained here only applies to the exact spectral
-pipeline (STFT window, bandwidth, noise normalization) it was calibrated
-on; recompute it whenever those choices change.
+The mixture model's ``mode='exp'`` fit also estimates a decay rate for
+the mean ion occupancy, giving an independent half-life estimate as a
+by-product (``A1Calibration.halflife_ms_byproduct``), useful as a
+cross-check against the primary result in ``rionsis.halflife``.
 """
 
 from __future__ import annotations
@@ -244,11 +236,9 @@ def _simulate_mixture_bootstrap(
 ) -> npt.NDArray[np.float64]:
     """Poisson injection + independent exponential decay + iid Gaussian noise.
 
-    A deliberately simpler generative model than
-    ``rionsis.simulation.decay_simulation.simulate_decay_traces``: no STFT
-    window response and no empirical noise library. It exists only to
-    parametric-bootstrap the bias and uncertainty of the mixture EM
-    estimator itself, not to validate the full analysis pipeline.
+    Used only to parametric-bootstrap the bias and uncertainty of the
+    mixture EM estimator; simpler than
+    ``rionsis.simulation.decay_simulation.simulate_decay_traces``.
     """
     n0 = rng.poisson(mu0, int(n_files))
     out = np.empty((int(n_files), len(t_s)), dtype=float)
@@ -337,10 +327,9 @@ def calibrate_a1(
     profile_grid : array_like, default DEFAULT_PROFILE_GRID
         Fixed ``A1`` values for the profile-likelihood scan.
     mc_reps : int, default 24
-        Number of parametric-bootstrap replicates used to bias-correct
-        and quantify the uncertainty of ``A1``. Time bins within a file
-        are correlated, so the likelihood-curvature interval would be too
-        optimistic; the bootstrap is used instead.
+        Number of parametric-bootstrap replicates for bias correction and
+        uncertainty (time bins within a file are correlated, so a
+        likelihood-curvature interval would be too optimistic).
     em_iter : int, default 800
         Maximum EM iterations for the primary fit (profile and bootstrap
         refits use ``max(300, em_iter // 2)``).
@@ -353,10 +342,9 @@ def calibrate_a1(
         A previously used/fixed A1 value to cross-check against the 68%
         calibration band (purely diagnostic; does not affect the fit).
     sigma_hint : float, optional
-        Initial guess for the bin-noise floor ``s0`` (e.g. the reference
-        noise level from ``normalize_ground_noise``). If omitted,
-        ``fit_power_mixture`` falls back to a data-driven guess from the
-        low-occupancy tail of ``y_files_e``.
+        Initial guess for the bin-noise floor ``s0`` (e.g. from
+        ``normalize_ground_noise``). If omitted, ``fit_power_mixture``
+        falls back to a data-driven guess.
 
     Returns
     -------

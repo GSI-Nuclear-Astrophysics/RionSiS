@@ -1,17 +1,13 @@
 """Pure end-to-end decay simulation with a known, injected half-life.
 
 For each simulated file: a Poisson-distributed initial ion count is
-drawn, each ion is assigned an independent exponential lifetime at the
-requested true rate, the STFT window response turns each decay into a
-smooth sub-bin transition of the effective occupancy, the noiseless
-plateau height is exactly ``occupancy * a1`` (no per-ion amplitude
-spread, no random per-file baseline offset -- those are not part of this
-model), and calibrated, empirically resampled bin noise is added around
-that occupancy-dependent level.
+drawn, each ion is assigned an independent exponential lifetime, the STFT
+window response turns each decay into a smooth sub-bin transition of the
+effective occupancy, the noiseless plateau height is exactly ``occupancy
+* a1``, and calibrated, empirically resampled bin noise is added.
 
-Random-number generation is always explicit: pass a seed or a
-``numpy.random.Generator`` and get back bit-identical output for the same
-input every time. No module-level or otherwise hidden RNG state is used.
+RNG use is always explicit (seed or ``numpy.random.Generator``); no
+hidden module-level RNG state.
 """
 
 from __future__ import annotations
@@ -55,9 +51,7 @@ class SimulationResult:
     noise_sigma : ndarray, shape (n_files, n_time)
         Per-bin noise standard deviation actually used, ``a1 * sigma(n_eff)``.
     y : ndarray, shape (n_files, n_time), float32
-        Simulated observed power: ``noiseless + noise``. Kept in float32
-        (like the raw spectrogram in ``rionsis.levels.spectral``) so that
-        large validation runs (thousands of files) stay memory-affordable.
+        Simulated observed power: ``noiseless + noise``.
     """
 
     seed: int | np.random.Generator
@@ -120,8 +114,7 @@ def simulate_decay_traces(
         Mean of the Poisson distribution for the initial ion count.
     seed : int or numpy.random.Generator
         Seeds three independent sub-streams (initial count, lifetimes,
-        noise) via ``numpy.random.default_rng(seed).spawn(3)``. Passing
-        the same integer seed always reproduces the same output.
+        noise) via ``numpy.random.default_rng(seed).spawn(3)``.
 
     Returns
     -------

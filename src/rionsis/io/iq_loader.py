@@ -1,11 +1,10 @@
 """Loading and validation of raw complex-IQ recordings.
 
 Each recording is a Schottky-type complex IQ time trace for one file
-("shot"). The expected on-disk format is a NumPy object array (saved with
-``np.save(..., allow_pickle=True)``) where every entry is a ``dict`` with
-the keys ``filename``, ``data`` (complex IQ samples) and ``fs`` (sampling
-rate in Hz). All files in a data set must share the same sampling rate
-and the same number of samples.
+("shot"). Expected on-disk format: a NumPy object array (``np.save(...,
+allow_pickle=True)``) of ``dict`` entries with keys ``filename``, ``data``
+(complex IQ samples), and ``fs`` (sampling rate in Hz). All files in a
+data set must share the same sampling rate and number of samples.
 """
 
 from __future__ import annotations

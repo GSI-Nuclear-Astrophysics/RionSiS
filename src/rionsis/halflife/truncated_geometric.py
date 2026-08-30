@@ -1,18 +1,14 @@
 """Doubly truncated discrete (geometric) half-life MLE.
 
-The dwell time ``k`` of a single ion in a state, measured in whole time
-bins, follows a geometric distribution once the survival probability per
-bin is written as ``exp(-rate*dt)``. Both ends of the observation window
-are hard-truncated by construction: a ``k`` below ``lo = L+1`` bins is
-never observed (a "strict cut" removing ambiguous short-lived
-detections), and a ``k`` above ``hi = H-G`` bins is not observed either
-(the analysis window ends, or is deliberately shortened by requiring
-``G`` bins of confirmed terminal ground state). This module fits the
-decay rate by maximum likelihood under that exact truncation, scans the
-fit over a grid of ``(G, L)`` cut choices, and quantifies uncertainty with
-a moving-block bootstrap over files (dwell times within the same file are
-not independent of each other in general, so bootstrapping over events
-directly would understate the uncertainty).
+The dwell time ``k`` of a single ion in a state, in whole time bins,
+follows a geometric distribution with per-bin survival probability
+``exp(-rate*dt)``. Both ends of the observation window are
+hard-truncated: ``k < lo = L+1`` is never observed (a "strict cut"
+removing ambiguous short-lived detections), and ``k > hi = H-G`` is not
+observed either (the window ends, or is shortened by requiring ``G``
+bins of confirmed terminal ground state). Uncertainty is quantified with
+a moving-block bootstrap over files, since dwell times within a file are
+not independent.
 """
 
 from __future__ import annotations
@@ -39,8 +35,7 @@ class GeometricFitResult:
         Fitted half-life in milliseconds, or NaN if there was not enough
         data (fewer than ``min_events`` events, or fewer than
         ``min_informative`` events with a non-degenerate truncation
-        window). NaN is an intentional "insufficient statistics" sentinel,
-        not a failure.
+        window).
     n_events : int
         Number of events available for this cut.
     rate_hz : float

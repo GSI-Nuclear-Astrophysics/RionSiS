@@ -1,8 +1,4 @@
-"""Validated input helpers for RionSiS.
-
-Currently limited to loading the raw complex IQ recordings that feed the
-single-ion level-detection pipeline (``rionsis.levels``).
-"""
+"""Validated input helpers for RionSiS."""
 
 from rionsis.io.iq_loader import IQDataset, load_iq_dataset
 

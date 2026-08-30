@@ -1,15 +1,7 @@
 """Exponential decay law: half-life <-> rate conversion.
 
-Both directions of this relation are used independently by the
-``simulation`` domain (turning an assumed half-life into a sampling rate
-for exponential lifetimes) and by the ``halflife`` domain (turning a
-fitted decay rate back into a reported half-life). Keeping a single
-implementation avoids the two domains silently drifting apart.
-
-These functions are unit-agnostic: pass a half-life and rate in whatever
-consistent time unit you like (seconds, milliseconds, ...); the caller is
-responsible for unit bookkeeping at the boundary. They are NumPy-safe and
-accept scalars or arrays.
+Unit-agnostic: pass half-life and rate in whatever consistent time unit
+you like; the caller handles unit bookkeeping at the boundary.
 """
 
 from __future__ import annotations

@@ -1,12 +1,8 @@
 """End-to-end regression test: simulate -> staircase fit -> half-life MLE.
 
-This mirrors the original notebook's own validation logic (its "PURE
-DECAY SIMULATION + IDENTICAL STAIRCASE FIT" cell): generate synthetic
-traces with a known half-life, reconstruct them with the *same* staircase
-fit used for real data, extract terminal decay events, and check the
-half-life MLE recovers the injected value. If a future change to any of
-``rionsis.simulation``, ``rionsis.levels.staircase``, or
-``rionsis.halflife`` breaks this invariant, this test should fail.
+Generates synthetic traces with a known half-life, reconstructs them with
+the same staircase fit used for real data, extracts terminal decay
+events, and checks the half-life MLE recovers the injected value.
 """
 
 from __future__ import annotations

@@ -1,10 +1,9 @@
 """STFT window response to a decay occurring mid-window.
 
-An ion that decays partway through an STFT analysis window is captured by
-that time bin only for the fraction of the (Hann^2) window *energy* that
-falls before the decay time. This turns a discrete decay into a smooth,
-sub-bin transition of the effective occupancy ``N_eff``, which is exactly
-what is seen in real data at the bin where a decay happens.
+An ion that decays partway through an STFT analysis window is captured
+by that time bin only for the fraction of the (Hann^2) window *energy*
+that falls before the decay time, giving a smooth sub-bin transition of
+the effective occupancy ``N_eff``.
 """
 
 from __future__ import annotations

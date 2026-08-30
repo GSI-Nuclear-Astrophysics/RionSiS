@@ -2,16 +2,13 @@
 
 A file contributes a decay-time observation only if its very last
 segment (latest time) is the ground state (``N=0``) and the segment just
-before it (in time) is ``N=1``: exactly one ion was present, and it
-decayed once, cleanly, before the recording ended. Everything upstream of
-that -- earlier segments, higher occupancies -- is not used, matching the
-original analysis's deliberate restriction to unambiguous single-ion
-terminal decays.
+before it is ``N=1``: exactly one ion was present, and it decayed once,
+cleanly, before the recording ended.
 
-Because ``rionsis.levels.staircase`` fits the time-*reversed* signal, the
+``rionsis.levels.staircase`` fits the time-*reversed* signal, so the
 first segment in ``states``/``lengths`` is the terminal (latest-time)
-segment. ``state[0] == 0 and state[1] == 1`` therefore means exactly
-"the file ends in the ground state, preceded by exactly one ion".
+segment: ``state[0] == 0 and state[1] == 1`` means "the file ends in the
+ground state, preceded by exactly one ion".
 """
 
 from __future__ import annotations

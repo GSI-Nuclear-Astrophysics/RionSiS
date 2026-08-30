@@ -1,6 +1,6 @@
 """Single-ion level detection: from raw IQ traces to an integer occupancy staircase.
 
-The pipeline, in order, is::
+Pipeline::
 
     IQ traces (rionsis.io)
       -> compute_power_spectrogram      (STFT + ground-state centering)
@@ -8,10 +8,6 @@ The pipeline, in order, is::
       -> calibrate_a1                    (independent single-ion power calibration)
       -> calibrate_noise_vs_occupancy    (sigma(N) from real plateaus)
       -> fit_integer_dataset             (exact monotonic integer staircase fit)
-
-Each stage is a plain function operating on explicit arrays: no notebook
-globals are read implicitly, so any stage can be used, tested, or
-replaced independently.
 """
 
 from rionsis.levels.bands import BandIntegration, GroundNoiseNormalization, integrate_bands, normalize_ground_noise
